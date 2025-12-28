@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iHatimOS - المبرمج حاتم</title>
+    <title>iHatimOS - لوحة التحكم</title>
     <style>
         body {
-            background-color: #121212;
+            background-color: #1a1a1a;
             color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -19,70 +19,81 @@
         #hatim-clock {
             color: #00ff00;
             font-family: 'Courier New', monospace;
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             text-shadow: 0 0 10px #00ff00;
             text-align: center;
-            padding: 15px;
+            padding: 10px;
         }
 
-        /* القائمة الجانبية (من التصميم القديم) */
-        .main-layout {
+        .main-container {
             display: flex;
             flex-wrap: wrap;
             flex: 1;
-            padding: 10px;
+            padding: 15px;
+            gap: 15px;
         }
 
+        /* أزرار جانبية أكثر */
         .sidebar {
-            width: 200px;
-            background: #1e1e1e;
+            flex: 1;
+            min-width: 180px;
+            background: #252525;
             padding: 20px;
             border-radius: 15px;
-            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .sidebar div {
-            padding: 10px;
-            margin-bottom: 5px;
+        .sidebar button {
+            background: #333;
+            color: white;
+            border: 1px solid #444;
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            border-radius: 8px;
+            text-align: right;
+            font-size: 1rem;
             transition: 0.3s;
         }
 
-        .sidebar div:hover { background: #333; }
+        .sidebar button:hover {
+            background: #00ff00;
+            color: black;
+        }
 
-        /* منطقة المحتوى الأبيض (من التصميم القديم) */
-        .content-area {
-            flex: 1;
+        .sidebar button.logout {
+            background: #ff4d4d;
+            margin-top: auto;
+            text-align: center;
+        }
+
+        /* مساحة المحتوى الأبيض (الطابع القديم) */
+        .white-board {
+            flex: 4;
+            min-width: 300px;
             background: white;
             color: black;
             border-radius: 20px;
             padding: 30px;
-            margin: 10px;
-            min-width: 300px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* زر تسجيل الخروج */
-        .logout-btn {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 20px;
+        #editor {
+            min-height: 300px;
+            font-size: 1.1rem;
+            outline: none;
+            line-height: 1.6;
         }
 
-        /* بصمة المبرمج في الأسفل */
+        /* بصمة المبرمج */
         .footer {
             background: #000;
             text-align: center;
             padding: 15px;
             font-size: 0.9rem;
-            color: #888;
+            color: #ccc;
         }
     </style>
 </head>
@@ -90,24 +101,23 @@
 
     <div id="hatim-clock">00:00:00</div>
 
-    <div class="main-layout">
+    <div class="main-container">
         <div class="sidebar">
-            <h2 style="color: #00ff00;">iHatimOS</h2>
-            <div>📝 ملاحظاتي</div>
-            <div>📂 المشاريع</div>
-            <div>✅ المهام</div>
-            <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+            <h2 style="color: #00ff00; margin-top: 0;">iHatimOS</h2>
+            <button onclick="changeTitle('📝 ملاحظاتي')">📝 الملاحظات</button>
+            <button onclick="changeTitle('✅ قائمة المهام')">✅ المهام</button>
+            <button onclick="changeTitle('📂 مشاريعي البرمجية')">📂 المشاريع</button>
+            <button onclick="changeTitle('⚙️ الإعدادات')">⚙️ الإعدادات</button>
+            <button onclick="saveData()" style="background: #28a745; color: white;">💾 حفظ العمل</button>
+            <button class="logout" onclick="logout()">🚪 تسجيل الخروج</button>
         </div>
 
-        <div class="content-area">
-            <h1 contenteditable="true">ملاحظاتي</h1>
+        <div class="white-board">
+            <h1 id="page-title">ملاحظاتي</h1>
             <hr>
-            <div id="editor" contenteditable="true" style="min-height: 200px; outline: none;">
-                اكتب مهامك أو ملاحظاتك هنا يا حاتم...
-                <br>
-                - مهمة 1: 
+            <div id="editor" contenteditable="true">
+                أهلاً بك يا مبرمج حاتم.. اكتب هنا ما تشاء.
             </div>
-            <button onclick="saveData()" style="margin-top:20px; padding:10px; cursor:pointer;">💾 حفظ العمل</button>
         </div>
     </div>
 
@@ -116,7 +126,6 @@
     </div>
 
     <script>
-        // دالة الساعة
         function updateClock() {
             const now = new Date();
             document.getElementById('hatim-clock').textContent = now.toLocaleTimeString('en-GB');
@@ -124,24 +133,23 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // دالة الحفظ
-        function saveData() {
-            const content = document.getElementById('editor').innerHTML;
-            localStorage.setItem('hatim_data', content);
-            alert("تم حفظ المهام والملاحظات! ✅");
+        function changeTitle(title) {
+            document.getElementById('page-title').innerText = title;
         }
 
-        // تحميل البيانات
-        window.onload = () => {
-            const saved = localStorage.getItem('hatim_data');
-            if(saved) document.getElementById('editor').innerHTML = saved;
-        };
+        function saveData() {
+            const data = document.getElementById('editor').innerHTML;
+            localStorage.setItem('hatim_work', data);
+            alert("تم الحفظ بنجاح! ✅");
+        }
 
-        // دالة تسجيل الخروج
+        window.onload = () => {
+            const saved = localStorage.getItem('hatim_work');
+            if(saved) document.getElementById('editor').innerHTML = saved;
+        }
+
         function logout() {
-            if(confirm("هل تريد الخروج؟")) {
-                window.location.href = "about:blank";
-            }
+            if(confirm("هل تود الخروج من النظام؟")) window.location.href = "about:blank";
         }
     </script>
 </body>
