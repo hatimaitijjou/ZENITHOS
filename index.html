@@ -3,112 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim Space | Ultimate Pro Edition</title>
+    <title>Hatim Space | Secure Edition</title>
     <style>
         :root { --primary: #00ff41; --bg: #0d0d0d; --toolbar: #1a1a1a; --text: #ffffff; }
-        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; height: 100vh; }
+        body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* شاشة الإقلاع (Splash) */
+        /* شاشة تسجيل الدخول */
+        #login-screen {
+            position: fixed; inset: 0; background: black; z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .login-box {
+            background: #111; padding: 40px; border-radius: 15px; border: 1px solid var(--primary);
+            text-align: center; box-shadow: 0 0 30px rgba(0,255,65,0.2); width: 300px;
+        }
+        .login-box input {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #333;
+            background: #222; color: white; outline: none; box-sizing: border-box;
+        }
+        .login-btn {
+            width: 100%; padding: 12px; background: var(--primary); color: black; font-weight: bold;
+            border: none; border-radius: 5px; cursor: pointer; transition: 0.3s;
+        }
+        .login-btn:hover { background: #00cc33; }
+
+        /* شاشة الإقلاع */
         #splash {
             position: fixed; inset: 0; background: black; z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.8s;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
         }
         .logo { font-size: 3.5rem; color: var(--primary); text-shadow: 0 0 20px var(--primary); margin: 0; }
-        .dev { color: #555; font-family: monospace; margin-top: 10px; text-transform: uppercase; }
         .loader { width: 250px; height: 3px; background: #222; margin-top: 30px; border-radius: 5px; overflow: hidden; }
         .bar { width: 0%; height: 100%; background: var(--primary); transition: 0.3s; }
 
         /* الواجهة الرئيسية */
-        #app { opacity: 0; height: 100vh; display: flex; flex-direction: column; transition: 1s; }
+        #app { display: none; height: 100vh; flex-direction: column; opacity: 0; transition: 1s; }
         
-        /* شريط أدوات الوورد */
+        /* شريط الأدوات */
         .toolbar {
             background: var(--toolbar); padding: 10px; display: flex; flex-wrap: wrap;
-            gap: 8px; border-bottom: 2px solid #333; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            gap: 8px; border-bottom: 2px solid #333; align-items: center;
         }
-        .btn-group { display: flex; gap: 4px; border-left: 1px solid #444; padding-left: 8px; margin-left: 4px; }
-        .tool-btn {
-            background: #2a2a2a; border: 1px solid #444; color: white; padding: 8px 12px; 
-            border-radius: 4px; cursor: pointer; font-size: 0.9rem; transition: 0.2s;
-        }
+        .tool-btn { background: #2a2a2a; border: 1px solid #444; color: white; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
         .tool-btn:hover { background: var(--primary); color: black; }
 
-        /* منطقة المحرر */
+        /* المحرر */
         .editor-frame { flex: 1; padding: 20px; overflow-y: auto; display: flex; justify-content: center; background: #121212; position: relative; }
         #editor {
             width: 100%; max-width: 900px; min-height: 100vh; background: white; color: black;
             padding: 50px; box-shadow: 0 0 30px rgba(0,0,0,0.5); outline: none; font-size: 18px; line-height: 1.6;
         }
 
-        /* قائمة السلاش الذكية */
+        /* قائمة السلاش */
         #slash-menu {
             position: absolute; background: #1a1a1a; border: 1px solid var(--primary);
-            border-radius: 8px; width: 280px; display: none; z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); padding: 8px; color: white;
+            border-radius: 8px; width: 250px; display: none; z-index: 1000; padding: 8px;
         }
-        .slash-item {
-            padding: 10px; cursor: pointer; border-radius: 5px; display: flex; align-items: center; gap: 10px; transition: 0.2s;
-        }
-        .slash-item:hover { background: var(--primary); color: black; font-weight: bold; }
-
-        /* العناصر المضافة */
-        .todo-item { display: flex; align-items: center; gap: 10px; margin: 5px 0; }
-        .project-card { border: 2px solid #00ff41; padding: 15px; border-radius: 8px; margin: 10px 0; background: #f9f9f9; }
+        .slash-item { padding: 10px; cursor: pointer; border-radius: 5px; display: flex; align-items: center; gap: 10px; }
+        .slash-item:hover { background: var(--primary); color: black; }
 
         footer { background: #0a0a0a; padding: 10px 30px; border-top: 1px solid #333; display: flex; justify-content: space-between; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="color:var(--primary)">HATIM SPACE</h2>
+            <p style="color:#666; font-size: 0.8rem;">Login to Secure Space</p>
+            <input type="text" id="username" placeholder="اسم المستخدم">
+            <input type="password" id="password" placeholder="كلمة المرور">
+            <button class="login-btn" onclick="checkLogin()">دخول</button>
+            <p id="error-msg" style="color:red; font-size:0.8rem; margin-top:10px; display:none;">بيانات خاطئة!</p>
+        </div>
+    </div>
+
     <div id="splash">
         <h1 class="logo">HATIM SPACE</h1>
-        <div class="dev">BY HATIM AIT IJJOU</div>
+        <div style="color:#555; margin-top:10px;">BY HATIM AIT IJJOU</div>
         <div class="loader"><div class="bar" id="bar"></div></div>
     </div>
 
     <div id="app">
         <div class="toolbar">
-            <div class="btn-group">
-                <button class="tool-btn" onclick="exec('bold')"><b>B</b></button>
-                <button class="tool-btn" onclick="exec('italic')"><i>I</i></button>
-                <button class="tool-btn" onclick="exec('underline')"><u>U</u></button>
-            </div>
-            <div class="btn-group">
-                <select onchange="exec('fontSize', this.value)">
-                    <option value="3">حجم عادي</option>
-                    <option value="5">كبير</option>
-                    <option value="7">ضخم</option>
-                </select>
-                <input type="color" onchange="exec('foreColor', this.value)" title="لون الخط">
-            </div>
-            <div class="btn-group">
-                <button class="tool-btn" onclick="exec('justifyRight')">➡️</button>
-                <button class="tool-btn" onclick="exec('justifyCenter')">↔️</button>
-                <button class="tool-btn" onclick="exec('insertUnorderedList')">• قائمة</button>
-            </div>
-            <div class="btn-group" style="border:none">
-                <button class="tool-btn" onclick="saveFile()" style="background:#28a745">📥 تحميل وحفظ</button>
-                <button class="tool-btn" onclick="window.print()">🖨️ طباعة</button>
-                <button class="tool-btn" onclick="clearAll()" style="background:#dc3545">🗑️ مسح</button>
-            </div>
+            <button class="tool-btn" onclick="exec('bold')">B</button>
+            <button class="tool-btn" onclick="exec('italic')">I</button>
+            <button class="tool-btn" onclick="exec('underline')">U</button>
+            <select onchange="exec('fontSize', this.value)">
+                <option value="3">عادي</option>
+                <option value="5">كبير</option>
+                <option value="7">ضخم</option>
+            </select>
+            <button class="tool-btn" onclick="saveFile()" style="background:#28a745">📥 حفظ وتحميل</button>
+            <button class="tool-btn" onclick="logout()" style="background:#dc3545">🚪 خروج</button>
         </div>
 
         <div class="editor-frame">
-            <div id="editor" contenteditable="true" spellcheck="false">
-                أهلاً بك يا حاتم... ابدأ الكتابة أو استخدم / لإضافة مهام ومشاريع.
-            </div>
-
+            <div id="editor" contenteditable="true" spellcheck="false">مرحباً بك يا حاتم... اكتب هنا أو استخدم /</div>
             <div id="slash-menu">
-                <div class="slash-item" onclick="insertTemplate('todo')"><span>✅</span> إضافة مهمة (To-do List)</div>
-                <div class="slash-item" onclick="insertTemplate('project')"><span>🚀</span> إضافة مشروع جديد (Project)</div>
-                <div class="slash-item" onclick="insertTemplate('divider')"><span>➖</span> إضافة خط فاصل</div>
-                <div class="slash-item" onclick="saveFile()"><span>💾</span> حفظ وتحميل الملف</div>
+                <div class="slash-item" onclick="insert('todo')">✅ إضافة مهمة</div>
+                <div class="slash-item" onclick="insert('project')">🚀 إضافة مشروع</div>
+                <div class="slash-item" onclick="saveFile()">💾 حفظ الملف</div>
             </div>
         </div>
 
         <footer>
-            <div>عدد الكلمات: <span id="wordCount">0</span></div>
-            <div>صنع بواسطة المبرمج: <span style="color:var(--primary)">Hatim Ait Ijjou</span></div>
+            <div>المبرمج: <span style="color:var(--primary)">Hatim Ait Ijjou</span></div>
+            <div>Hatim Space &copy; 2026</div>
         </footer>
     </div>
 
@@ -116,28 +117,37 @@
         const editor = document.getElementById('editor');
         const menu = document.getElementById('slash-menu');
 
-        // الإقلاع
-        window.onload = () => {
+        function checkLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if(user === "hatim" && pass === "1234") {
+                document.getElementById('login-screen').style.display = 'none';
+                startSplash();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function startSplash() {
+            const splash = document.getElementById('splash');
+            splash.style.display = 'flex';
             let p = 0;
             const b = setInterval(() => {
                 p += 20; document.getElementById('bar').style.width = p + "%";
                 if(p >= 100) {
                     clearInterval(b);
+                    splash.style.opacity = '0';
                     setTimeout(() => {
-                        document.getElementById('splash').style.opacity = '0';
-                        setTimeout(() => {
-                            document.getElementById('splash').style.display = 'none';
-                            document.getElementById('app').style.opacity = '1';
-                            if(localStorage.getItem('hatim_data')) editor.innerHTML = localStorage.getItem('hatim_data');
-                        }, 800);
-                    }, 400);
+                        splash.style.display = 'none';
+                        document.getElementById('app').style.display = 'flex';
+                        setTimeout(() => document.getElementById('app').style.opacity = '1', 100);
+                    }, 800);
                 }
             }, 100);
-        };
+        }
 
         function exec(cmd, val = null) { document.execCommand(cmd, false, val); }
 
-        // نظام السلاش الذكي
         editor.addEventListener('keyup', (e) => {
             const sel = window.getSelection();
             if (sel.rangeCount > 0) {
@@ -146,25 +156,16 @@
                 if (text.endsWith('/')) {
                     const rect = range.getBoundingClientRect();
                     menu.style.display = 'block';
-                    menu.style.top = (rect.bottom + window.scrollY - 150) + 'px';
+                    menu.style.top = (rect.bottom + window.scrollY - 100) + 'px';
                     menu.style.left = rect.left + 'px';
                 } else { menu.style.display = 'none'; }
             }
-            updateStats();
         });
 
-        function insertTemplate(type) {
-            editor.focus();
-            document.execCommand('delete', false, null); // مسح السلاش
-            if(type === 'todo') {
-                const html = '<div class="todo-item"><input type="checkbox"> <span>مهمة جديدة...</span></div><br>';
-                document.execCommand('insertHTML', false, html);
-            } else if(type === 'project') {
-                const html = '<div class="project-card"><h3>🚀 اسم المشروع</h3><p>وصف مختصر للمشروع...</p><small>الحالة: قيد التنفيذ</small></div><br>';
-                document.execCommand('insertHTML', false, html);
-            } else if(type === 'divider') {
-                document.execCommand('insertHTML', false, '<hr><br>');
-            }
+        function insert(type) {
+            editor.focus(); document.execCommand('delete', false, null);
+            if(type === 'todo') document.execCommand('insertHTML', false, '<div><input type="checkbox"> مهمة جديدة...</div><br>');
+            if(type === 'project') document.execCommand('insertHTML', false, '<div style="border:1px solid #00ff41; padding:10px">🚀 مشروع حاتم: ...</div><br>');
             menu.style.display = 'none';
         }
 
@@ -172,18 +173,10 @@
             const blob = new Blob([editor.innerText], {type: "text/plain"});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = "Hatim_Space_Work.txt";
-            a.click();
+            a.download = "Hatim_Space.txt"; a.click();
         }
 
-        function clearAll() { if(confirm("مسح كل شيء؟")) editor.innerHTML = ""; }
-
-        function updateStats() {
-            const text = editor.innerText.trim();
-            document.getElementById('wordCount').innerText = text ? text.split(/\s+/).length : 0;
-            localStorage.setItem('hatim_data', editor.innerHTML);
-        }
-
+        function logout() { location.reload(); }
         document.addEventListener('click', (e) => { if(e.target.id !== 'editor') menu.style.display = 'none'; });
     </script>
 </body>
