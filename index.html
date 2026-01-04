@@ -2,236 +2,137 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HATIM SPACE OS | النسخة الكاملة</title>
+<title>HATIM SPACE OS | the beste</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-    --primary: #00ff41;
-    --secondary: #00d4ff;
-    --bg: #050505;
-    --panel: #111;
-    --text: #eee;
-    --glass: rgba(255, 255, 255, 0.05);
-    --accent: #ff4d4d;
-    --ai-bg: #0a0a0a;
+    --primary:#00ff41;
+    --secondary:#00d4ff;
+    --bg:#050505;
+    --panel:#111;
+    --text:#eee;
+    --glass:rgba(255,255,255,0.05);
 }
+* { box-sizing:border-box; font-family:'Cairo',sans-serif; }
+body,html { margin:0; padding:0; height:100vh; overflow:hidden; color:var(--text); }
+#stars { position:fixed; inset:0; background:#000; z-index:-1; overflow:hidden; }
 
-* { box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-body, html { margin:0; padding:0; height:100vh; background:var(--bg); color:var(--text); overflow:hidden; }
+/* Login */
+#login-screen { position:fixed; inset:0; z-index:9999; display:flex; justify-content:center; align-items:center; }
+.login-card { background: var(--glass); backdrop-filter:blur(25px); padding:60px; border-radius:40px; border:1px solid rgba(0,255,65,0.2); width:450px; text-align:center; box-shadow:0 0 80px rgba(0,255,65,0.2); }
+.dev-badge { color: var(--primary); font-weight:bold; letter-spacing:2px; margin-bottom:20px; display:block; }
+.main-logo { font-size:3.5rem; font-weight:900; background: linear-gradient(45deg,var(--primary),var(--secondary)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:30px; }
+.login-card input { width:100%; padding:15px; margin-bottom:20px; background:#000; border:1px solid #333; color:white; border-radius:12px; transition:0.3s; }
+.login-card input:focus { border-color: var(--primary); outline:none; }
+.login-card button { width:100%; padding:18px; font-weight:900; color:black; background:var(--primary); border:none; border-radius:12px; cursor:pointer; transition:0.3s, transform 0.2s; }
+.login-card button:hover { background: var(--secondary); transform:scale(1.05); }
 
-/* 1. شاشة الدخول */
-#login-screen {
-    position:fixed; inset:0; z-index:9999;
-    background: radial-gradient(circle at center, #1b2735 0%, #000 100%);
-    display:flex; justify-content:center; align-items:center; transition:0.8s;
-}
-.login-card {
-    background:var(--glass); backdrop-filter:blur(20px);
-    padding:50px; border-radius:30px; border:1px solid rgba(255,255,255,0.1);
-    text-align:center; width:400px; box-shadow:0 0 50px rgba(0,255,65,0.2);
-}
-.logo-text {
-    font-size:3.5rem; font-weight:900;
-    background: linear-gradient(45deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
-.login-card input {
-    width:100%; padding:15px; margin:20px 0; background:#000; border:1px solid #333; color:white; border-radius:10px;
-}
-.login-card button {
-    width:100%; padding:15px; background:var(--primary); color:black; border:none; border-radius:10px; cursor:pointer;
-    font-weight:bold; transition:0.3s;
-}
-.login-card button:hover { background: var(--secondary); }
-
-/* 2. واجهة التطبيق */
-#app-interface { display:none; height:100vh; flex-direction:column; }
-
-/* Ribbon */
-.ribbon {
-    background: var(--panel); padding:10px 20px; display:flex; gap:15px; border-bottom:2px solid #222; align-items:center; z-index:100;
-}
-.ribbon .group { display:flex; gap:8px; border-left:1px solid #333; padding:0 15px; }
-.ribbon .btn {
-    background:#222; border:1px solid #444; color:white; padding:8px 15px; border-radius:6px;
-    cursor:pointer; transition:0.3s; font-size:14px;
-}
-.ribbon .btn:hover { background:var(--primary); color:black; font-weight:bold; }
-
-/* Main workspace */
-.main-workspace { flex:1; display:flex; overflow:hidden; }
-
-/* AI Sidebar */
-.ai-sidebar { width:320px; background:var(--ai-bg); border-left:1px solid #222; display:flex; flex-direction:column; }
-.ai-sidebar header { padding:15px; font-weight:bold; color:var(--primary); border-bottom:1px solid #222; }
-#chat-messages { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
-.bubble { padding:12px; border-radius:12px; font-size:14px; max-width:85%; line-height:1.5; }
-.bubble.user { background:#333; align-self:flex-end; }
-.bubble.ai { background:var(--primary); color:black; align-self:flex-start; font-weight:bold; border-right:4px solid #fff; }
-
-/* Chat input */
-.ai-sidebar input { width:100%; padding:12px; background:#111; border:1px solid #333; color:white; border-radius:8px; }
-
-/* Editor */
-.editor-container { flex:1; padding:40px; overflow-y:auto; background:#000; position:relative; }
-#editor {
-    width:100%; max-width:900px; min-height:1100px; background:white; color:#111;
-    padding:80px; margin:auto; border-radius:10px; outline:none; font-size:19px; line-height:1.8;
-    box-shadow:0 0 40px rgba(0,0,0,0.5);
-}
-
-/* Slash menu */
-#slash-menu {
-    position:absolute; background:#1a1a1a; border:1px solid var(--primary);
-    border-radius:10px; width:250px; display:none; z-index:1000; padding:10px;
-}
-.s-item {
-    padding:12px; cursor:pointer; border-radius:8px; transition:0.2s; font-size:14px;
-    display:flex; align-items:center; gap:10px;
-}
-.s-item:hover { background:var(--primary); color:black; font-weight:bold; }
-
-/* Table styling */
-table { width:100%; border-collapse:collapse; margin:20px 0; border:2px solid #ddd; }
-td, th { border:1px solid #ccc; padding:12px; text-align:center; }
-
-/* Responsive */
-@media(max-width: 900px) { .main-workspace { flex-direction:column; } .ai-sidebar { width:100%; height:250px; border-left:none; border-top:1px solid #222; } }
+/* App Interface */
+#app-interface { display:none; flex-direction:column; height:100vh; }
+.top-bar { background:var(--panel); padding:10px 25px; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #222; }
+.top-bar .btn { margin-right:5px; transition:0.3s; }
+.top-bar .btn:hover { background:var(--primary); color:black; transform:scale(1.05); font-weight:bold; }
+.workspace { display:flex; flex:1; overflow:hidden; position:relative; }
+.editor-side { flex:1; padding:40px; background:rgba(0,0,0,0.7); overflow-y:auto; position:relative; }
+#paper { width:100%; max-width:900px; min-height:1100px; margin:auto; padding:60px; border-radius:12px; background: rgba(255,255,255,0.95); box-shadow: inset 0 0 20px rgba(0,0,0,0.4); color:#111; font-size:18px; line-height:1.8; outline:none; transition:0.3s; }
+#paper:focus { box-shadow:0 0 40px var(--primary); }
+#slash-menu { position:absolute; width:260px; background:#111; border:1px solid var(--primary); border-radius:15px; padding:12px; display:none; z-index:1000; }
+.s-item { padding:12px; cursor:pointer; border-radius:10px; transition:0.2s; display:flex; align-items:center; gap:10px; font-size:14px; }
+.s-item:hover { background: var(--primary); color:black; font-weight:bold; transform:scale(1.02); }
+.ai-chat-side { width:350px; background: var(--panel); border-right:1px solid #222; display:flex; flex-direction:column; }
+.ai-chat-side header { padding:15px; font-weight:bold; color:var(--primary); border-bottom:1px solid #222; }
+#chat-flow { flex:1; padding:20px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; }
+.bubble { padding:12px; border-radius:12px; max-width:85%; font-size:14px; line-height:1.5; opacity:0; animation:fadeMsg 0.5s forwards; }
+.bubble.user { background:#333; align-self:flex-end; color:white; }
+.bubble.ai { background:var(--primary); color:black; align-self:flex-start; font-weight:bold; text-shadow:0 0 5px white; }
+.ai-chat-side input { width:100%; padding:12px; background:#000; border:1px solid #333; border-radius:8px; color:white; transition:0.3s; }
+.ai-chat-side input:focus { border-color:var(--primary); outline:none; }
+.signature-footer { position:fixed; bottom:10px; left:20px; font-size:12px; color:#666; }
+.signature-footer span { color: var(--primary); font-weight:bold; }
+@keyframes fadeMsg { from {opacity:0; transform:translateY(10px);} to {opacity:1; transform:translateY(0);} }
 </style>
 </head>
 <body>
-
-<!-- Login Screen -->
+<div id="stars"></div>
 <div id="login-screen">
     <div class="login-card">
-        <div class="logo-text">HATIM</div>
-        <p style="letter-spacing:5px; color:#888;">SPACE OS</p>
-        <input type="text" id="user-input" placeholder="اسم القائد الأسطوري">
-        <button onclick="enterSpace()">فتح البوابة الفضائية 🚀</button>
+        <span class="dev-badge">برمج من طرف حاتم آيت أجو</span>
+        <div class="main-logo">HATIM SPACE</div>
+        <input type="text" id="captain-name" placeholder="اسم القائد...">
+        <button onclick="launchOS()">تشغيل النظام الأسطوري 🚀</button>
     </div>
 </div>
-
-<!-- App Interface -->
 <div id="app-interface">
-    <header class="ribbon">
-        <div style="font-weight:900; color:var(--primary)">HATIM SPACE</div>
-        <div class="group">
-            <button class="btn" onclick="exec('bold')">B</button>
-            <button class="btn" onclick="exec('italic')">I</button>
-            <input type="color" onchange="exec('foreColor', this.value)" style="cursor:pointer; width:35px;">
+    <header class="top-bar">
+        <div style="font-weight:900; color:var(--primary);">HATIM SPACE OS | Office + Notion</div>
+        <div>
+            <button class="btn" onclick="document.execCommand('bold')">B</button>
+            <button class="btn" onclick="insTable()">📊 جدول</button>
+            <button class="btn" onclick="insSlide()">🖼️ شريحة</button>
+            <button class="btn" onclick="insToggle()">🗂️ Toggle List (Notion)</button>
+            <button class="btn" onclick="changeBG()">🌌 تغيير الخلفية</button>
+            <button class="btn" onclick="uploadBG()">🖼️ رفع خلفية</button>
         </div>
-        <div class="group">
-            <button class="btn" onclick="insTable()">📊 جدول (Excel)</button>
-            <button class="btn" onclick="insSlide()">🖼️ شريحة (PPT)</button>
-        </div>
-        <button class="btn" style="margin-right:auto; background:var(--accent); border:none;" onclick="location.reload()">خروج 🚪</button>
+        <div style="color:#888; font-size:12px;">المبرمج: <span style="color:white;">حاتم آيت أجو</span></div>
     </header>
-
-    <div class="main-workspace">
-        <div class="ai-sidebar">
+    <div class="workspace">
+        <div class="ai-chat-side">
             <header>🤖 HATIM AI ENGINE</header>
-            <div id="chat-messages"></div>
-            <div style="padding:15px; background:#000;">
-                <input type="text" id="ai-input" placeholder="دردش مع الذكاء..." onkeypress="if(event.key==='Enter') chatAI()">
-            </div>
+            <div id="chat-flow"></div>
+            <div style="padding:15px;"><input type="text" id="ai-in" placeholder="دردش مع الذكاء..." onkeypress="if(event.key==='Enter') aiChat()"></div>
         </div>
-
-        <div class="editor-container">
-            <div id="editor" contenteditable="true" spellcheck="false">
-                <h1 style="text-align:center;">مرحباً بك في مساحتك الخاصة 🪐</h1>
-                <p>استخدم السلاش <b>/</b> لتشغيل القوى الخارقة للذكاء الاصطناعي...</p>
+        <div class="editor-side">
+            <div id="paper" contenteditable="true" spellcheck="false">
+                <h1 style="text-align:center;">إبداع جديد بقلم حاتم ✍️</h1>
+                <p>اكتب <b>/</b> لتشغيل ذكاء حاتم البرمجي أو أدوات Notion الذكية...</p>
             </div>
             <div id="slash-menu">
-                <div class="s-item" onclick="aiWrite('story')">📖 AI: تأليف قصة أسطورية</div>
-                <div class="s-item" onclick="aiWrite('code')">💻 AI: برمجة دالة ذكية</div>
+                <div class="s-item" onclick="aiWrite('story')">📖 تأليف قصة أسطورية</div>
+                <div class="s-item" onclick="aiWrite('code')">💻 إنشاء كود برمجى</div>
                 <div class="s-item" onclick="insTable()">📊 إدراج جدول بيانات</div>
-                <div class="s-item" onclick="exec('insertImage', prompt('رابط الصورة:'))">🖼️ إضافة صورة</div>
+                <div class="s-item" onclick="insToggle()">🗂️ Toggle List (Notion)</div>
             </div>
         </div>
     </div>
 </div>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
+<div class="signature-footer">برمج من طرف <span>حاتم آيت أجو</span> | 2026</div>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBYW9x3xQvcZugc0mJx5iFbByPtGkXNx4M",
-  authDomain: "hatim-space-4f7e8.firebaseapp.com",
-  projectId: "hatim-space-4f7e8",
-  databaseURL: "https://hatim-space-4f7e8-default-rtdb.firebaseio.com",
-  appId: "1:1014020499692:web:37e023621b0ff9ee59ddc9"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-function enterSpace() {
-    const name = document.getElementById('user-input').value.trim();
-    if(!name) return alert("يرجى إدخال اسمك يا قائد!");
-    document.getElementById('login-screen').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('app-interface').style.display = 'flex';
-        addMsg(`🤖 HATIM AI: أهلاً بك يا ${name}! بوابة الفضاء مفتوحة وجاهزة لأوامرك.`, 'ai');
-    }, 800);
+function launchOS(){
+    const name=document.getElementById('captain-name').value.trim();
+    if(!name) return alert("يرجى إدخال اسمك!");
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-interface').style.display='flex';
 }
-
-function exec(cmd, val=null) { document.execCommand(cmd, false, val); }
-
-const editor = document.getElementById('editor');
-const menu = document.getElementById('slash-menu');
-
-editor.addEventListener('keyup', e => {
-    const sel = window.getSelection();
-    if(sel.rangeCount>0 && sel.getRangeAt(0).startContainer.textContent.endsWith('/')) {
-        const rect = sel.getRangeAt(0).getBoundingClientRect();
-        menu.style.display = 'block';
-        menu.style.top = (rect.bottom + window.scrollY + 5) + 'px';
-        menu.style.left = rect.left + 'px';
-    } else { menu.style.display = 'none'; }
+const paper=document.getElementById('paper');
+const sMenu=document.getElementById('slash-menu');
+paper.addEventListener('keyup',()=>{
+    const sel=window.getSelection();
+    if(sel.rangeCount>0 && sel.getRangeAt(0).startContainer.textContent.endsWith('/')){
+        const rect=sel.getRangeAt(0).getBoundingClientRect();
+        sMenu.style.display='block';
+        sMenu.style.top=(rect.bottom+window.scrollY+5)+'px';
+        sMenu.style.left=rect.left+'px';
+    } else sMenu.style.display='none';
 });
-
-function chatAI() {
-    const inp = document.getElementById('ai-input');
-    const val = inp.value.trim();
-    if(!val) return;
-    addMsg(val, 'user'); inp.value = "";
-    setTimeout(() => {
-        let resp = "بصفتي ذكاء حاتم، سأقوم بتحليل هذا الطلب بعمق أسطوري!";
-        const q = val.toLowerCase();
-        if(q.includes("قصة")) resp = "في عام 2050، أصبح مشروع HATIM SPACE العقل المدبر لكل التكنولوجيا العالمية...";
-        if(q.includes("مرحبا")) resp = "أهلاً بك يا قائد! كيف نسحق الأهداف اليوم؟";
-        if(q.includes("أحمق")) resp = "أعتذر يا حاتم، لقد قمت بتحديث بروتوكولات الذكاء لفهمك الآن.";
-        addMsg(`🤖 HATIM AI: ${resp}`, 'ai');
-    }, 700);
+function aiChat(){
+    const i=document.getElementById('ai-in');
+    const f=document.getElementById('chat-flow');
+    if(!i.value) return;
+    const u=document.createElement('div'); u.className='bubble user'; u.innerText=i.value; f.appendChild(u);
+    f.scrollTop=f.scrollHeight;
+    setTimeout(()=>{ const a=document.createElement('div'); a.className='bubble ai'; a.innerText='بصفتي ذكاء حاتم، سأحلل طلبك فوراً!'; f.appendChild(a); f.scrollTop=f.scrollHeight; },700);
+    i.value='';
 }
-
-function addMsg(text, type) {
-    const d = document.createElement('div');
-    d.className = `bubble ${type}`;
-    d.innerText = text;
-    document.getElementById('chat-messages').appendChild(d);
-    document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+function aiWrite(t){
+    sMenu.style.display='none'; document.execCommand('delete');
+    const content=t==='story'?"في عالم يحكمه الكود، برز اسم حاتم كقائد للثورة التقنية...":"const hatimProject=()=>{console.log('Universal Success');}";
+    document.execCommand('insertHTML',`<span style="color:var(--primary)">${content}</span>`);
 }
-
-function aiWrite(type) {
-    menu.style.display = 'none';
-    exec('delete');
-    let content = type==='story' ? "بُنيت إمبراطورية حاتم على أنقاض التكنولوجيا القديمة..." : "const hatimPower = () => 'Unlimited';";
-    exec('insertHTML', `<span style="color:var(--primary)">${content}</span>`);
-}
-
-function insTable() {
-    menu.style.display = 'none';
-    exec('insertHTML', `<table><tr><th>الفئة</th><th>القيمة</th></tr><tr><td>المعالج</td><td>AI Turbo</td></tr><tr><td>الحالة</td><td>أسطوري</td></tr></table><p></p>`);
-}
-
-function insSlide() {
-    exec('insertHTML', `<div style="background:#111; color:var(--primary); padding:50px; border-radius:20px; text-align:center; border:2px solid var(--primary); margin:20px 0;"><h2>شريحة HATIM SPACE</h2><p>الإبداع لا يعرف حدوداً</p></div>`);
-}
+function insTable(){ sMenu.style.display='none'; document.execCommand('insertHTML',`<table border="1" style="width:100%; border-collapse:collapse;"><tr><td>بيانات</td><td>قيم</td></tr></table>`);}
+function insSlide(){ document.execCommand('insertHTML',`<div style="background:#111; color:white; padding:40px; border-radius:15px; text-align:center;"><h2>شريحة أسطورية</h2></div>`);}
+function insToggle(){ document.execCommand('insertHTML',`<div style="padding:15px; border-left:4px solid var(--primary); margin:10px 0;"><b>Toggle:</b> محتوى قابل للطي هنا...</div>`);}
+function changeBG(){ const colors=['#050505','#1b1b2f','#0a0a1a','#110022','#001122','#111111']; document.getElementById('stars').style.background=colors[Math.floor(Math.random()*colors.length)];}
+function uploadBG(){ const input=document.createElement('input'); input.type='file'; input.accept='image/*'; input.onchange=e=>{ const file=e.target.files[0]; const url=URL.createObjectURL(file); document.getElementById('stars').style.background=`url('${url}') center/cover no-repeat`;}; input.click();}
 </script>
-
 </body>
 </html>
- 
