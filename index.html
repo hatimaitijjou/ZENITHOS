@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HATIM OS | Global Empire</title>
+    <title>HATIM OS | Global Empire v2</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary: #d4af37; /* الذهبي الملكي */
-            --accent: #000;
-            --glass: rgba(255, 255, 255, 0.1);
-            --glass-strong: rgba(20, 20, 20, 0.85);
+            --primary: #d4af37; /* ذهبي */
+            --glass-strong: rgba(18, 18, 18, 0.9);
             --border: rgba(212, 175, 55, 0.3);
             --text: #eee;
             --taskbar-h: 60px;
@@ -21,51 +19,37 @@
         * { box-sizing: border-box; user-select: none; font-family: 'Tajawal', sans-serif; }
         body { margin: 0; overflow: hidden; height: 100vh; background: #000; color: var(--text); }
 
-        /* الخلفية الفخمة */
+        /* الخلفية */
         #wallpaper {
             position: fixed; inset: 0;
             background: url('https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?q=80&w=2070') center/cover;
-            filter: brightness(0.6); z-index: -2; transition: 1s;
+            filter: brightness(0.5); z-index: -2;
         }
 
-        /* الشريط العلوي (Global Bar) */
+        /* الشريط العلوي */
         #top-bar {
             position: fixed; top: 0; left: 0; right: 0; height: 30px;
-            background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: space-between;
+            background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; font-size: 0.8rem; z-index: 5000; border-bottom: 1px solid var(--border);
         }
-        .live-badge { color: red; animation: blink 2s infinite; margin-left: 5px; }
-        @keyframes blink { 50% { opacity: 0.5; } }
-
-        /* شاشة الإقلاع */
-        #boot-screen {
-            position: fixed; inset: 0; background: #050505; z-index: 99999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 1s;
-        }
-        .empire-logo {
-            font-size: 4rem; background: linear-gradient(45deg, #d4af37, #fff);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-transform: uppercase; letter-spacing: 5px; font-weight: 900;
-            margin-bottom: 10px; animation: shine 3s infinite;
-        }
-        @keyframes shine { 0%{filter:brightness(1);} 50%{filter:brightness(1.5); text-shadow:0 0 20px #d4af37;} 100%{filter:brightness(1);} }
+        .live-dot { width:8px; height:8px; background:red; border-radius:50%; display:inline-block; animation:blink 1s infinite; margin-right:5px; }
+        @keyframes blink { 50% {opacity:0.3;} }
 
         /* سطح المكتب */
         #desktop {
             position: absolute; inset: 0; top: 30px; bottom: var(--taskbar-h);
-            padding: 30px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 25px;
+            padding: 30px; display: flex; flex-direction: column; flex-wrap: wrap; align-content: flex-start; gap: 20px;
         }
         .app-icon {
             width: 90px; display: flex; flex-direction: column; align-items: center; cursor: pointer;
             text-shadow: 0 2px 5px black; transition: 0.3s; position: relative;
         }
-        .app-icon:hover { transform: translateY(-5px); }
+        .app-icon:hover { transform: scale(1.1); }
         .icon-box {
             width: 65px; height: 65px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; margin-bottom: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            font-size: 2rem; margin-bottom: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.2));
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
         }
         .del-btn { position: absolute; top: -5px; right: 10px; background: red; width: 20px; height: 20px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 10px; }
         .app-icon:hover .del-btn { display: flex; }
@@ -73,16 +57,16 @@
         /* النوافذ */
         .window {
             position: absolute; background: var(--glass-strong); backdrop-filter: blur(40px);
-            border: 1px solid var(--border); border-radius: 12px;
-            display: flex; flex-direction: column; box-shadow: 0 50px 100px rgba(0,0,0,0.8);
+            border: 1px solid var(--border); border-radius: 10px;
+            display: flex; flex-direction: column; box-shadow: 0 40px 100px rgba(0,0,0,1);
             min-width: 400px; min-height: 300px; resize: both; overflow: hidden;
-            animation: openWin 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            animation: pop 0.3s cubic-bezier(0.19, 1, 0.22, 1);
         }
-        @keyframes openWin { from{transform:translateY(50px) scale(0.9);opacity:0;} to{transform:translateY(0) scale(1);opacity:1;} }
+        @keyframes pop { from{transform:scale(0.9);opacity:0;} to{transform:scale(1);opacity:1;} }
 
         .win-header {
-            height: 45px; background: rgba(0,0,0,0.4); border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center; padding: 0 20px; cursor: grab;
+            height: 40px; background: rgba(0,0,0,0.5); border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 15px; cursor: grab;
         }
         .win-title { font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 10px; }
         .win-controls { display: flex; gap: 8px; }
@@ -94,113 +78,115 @@
         /* شريط المهام */
         #taskbar {
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 95%; height: var(--taskbar-h);
-            background: rgba(10, 10, 10, 0.9); backdrop-filter: blur(30px);
+            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(20px);
             border: 1px solid var(--border); border-radius: 20px;
-            display: flex; align-items: center; padding: 0 20px; z-index: 10000; box-shadow: 0 20px 50px black;
+            display: flex; align-items: center; padding: 0 20px; z-index: 10000; box-shadow: 0 10px 40px black;
         }
-        .start-btn { font-size: 2rem; color: var(--primary); cursor: pointer; margin-left: 10px; transition: 0.3s; }
-        .start-btn:hover { transform: scale(1.1) rotate(10deg); text-shadow: 0 0 15px var(--primary); }
-        .dock { display: flex; gap: 10px; margin: 0 20px; flex: 1; }
+        .start-btn { font-size: 2.2rem; color: var(--primary); cursor: pointer; transition: 0.3s; margin-left:15px; }
+        .start-btn:hover { transform: scale(1.1); filter: drop-shadow(0 0 10px var(--primary)); }
+        
+        .dock { display: flex; gap: 10px; flex: 1; margin: 0 20px; }
         .dock-item {
             width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.05);
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer;
-            transition: 0.2s; position: relative;
+            transition: 0.2s; position: relative; border-bottom: 2px solid transparent;
         }
         .dock-item:hover { background: rgba(255,255,255,0.15); transform: translateY(-5px); }
-        .dock-item.active::after { content:''; position: absolute; bottom: -5px; width: 20px; height: 3px; background: var(--primary); }
+        .dock-item.active { border-color: var(--primary); }
 
-        /* --- تصميم التطبيقات --- */
+        /* --- تصميم مدير الملفات (H-Files) --- */
+        .fm-layout { display: flex; height: 100%; }
+        .fm-sidebar { width: 150px; background: rgba(0,0,0,0.3); border-left: 1px solid #333; padding: 10px; display: flex; flex-direction: column; gap: 5px; }
+        .fm-side-item { padding: 8px; cursor: pointer; border-radius: 5px; font-size: 0.9rem; color: #aaa; }
+        .fm-side-item:hover, .fm-side-item.active { background: rgba(255,255,255,0.1); color: white; }
         
-        /* H-Writer */
-        .writer-toolbar { padding: 10px; background: #222; border-bottom: 1px solid #444; display: flex; gap: 10px; }
-        .writer-btn { background: #333; border: none; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        .writer-paper { width: 100%; height: 100%; background: white; color: black; padding: 40px; outline: none; overflow-y: auto; }
-        
-        /* H-Chat (WhatsApp Style) */
+        .fm-main { flex: 1; display: flex; flex-direction: column; }
+        .fm-toolbar { height: 40px; border-bottom: 1px solid #333; display: flex; align-items: center; padding: 0 10px; gap: 10px; background: rgba(0,0,0,0.2); }
+        .fm-path { background: #222; padding: 5px 10px; border-radius: 4px; flex: 1; font-family: monospace; font-size: 0.9rem; color: var(--primary); }
+        .fm-btn { background: none; border: 1px solid #444; color: white; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
+        .fm-btn:hover { background: #444; }
+
+        .fm-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; padding: 15px; overflow-y: auto; flex: 1; }
+        .file-item { display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; padding: 10px; border-radius: 5px; }
+        .file-item:hover { background: rgba(255,255,255,0.1); }
+        .file-icon { font-size: 2.5rem; margin-bottom: 5px; }
+        .file-name { font-size: 0.85rem; word-break: break-all; }
+
+        /* H-Chat */
         .chat-layout { display: flex; height: 100%; }
-        .chat-sidebar { width: 250px; background: #111; border-left: 1px solid #333; overflow-y: auto; }
-        .chat-contact { padding: 15px; border-bottom: 1px solid #222; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .chat-sidebar { width: 220px; background: #111; border-left: 1px solid #333; overflow-y: auto; }
+        .chat-contact { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .chat-contact:hover { background: #222; }
-        .chat-contact img { width: 40px; height: 40px; border-radius: 50%; background: #555; }
-        .chat-main { flex: 1; display: flex; flex-direction: column; background: #000; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); }
-        .chat-msgs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .chat-bubble { max-width: 70%; padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; position: relative; }
-        .chat-bubble.in { background: #202c33; align-self: flex-start; color: white; border-top-left-radius: 0; }
-        .chat-bubble.out { background: #005c4b; align-self: flex-end; color: white; border-top-right-radius: 0; }
-        
+        .chat-msgs { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b0b0b; }
+        .chat-bubble { max-width: 70%; padding: 10px 15px; border-radius: 10px; font-size: 0.9rem; }
+        .chat-bubble.in { background: #333; align-self: flex-start; }
+        .chat-bubble.out { background: var(--primary); color: black; align-self: flex-end; }
+
         /* المتجر */
-        .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; padding: 20px; }
-        .store-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid transparent; }
-        .store-item:hover { border-color: var(--primary); }
-        .install-btn { width: 100%; padding: 8px; margin-top: 10px; background: var(--primary); border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        
+        .store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; }
+        .store-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid transparent; transition:0.3s; }
+        .store-item:hover { border-color: var(--primary); transform: translateY(-5px); }
+
     </style>
 </head>
 <body>
 
     <div id="wallpaper"></div>
-    
-    <!-- الشريط العلوي العالمي -->
+
     <div id="top-bar">
-        <div style="display:flex; align-items:center;">
-            <i class="fas fa-globe"></i>&nbsp; HATIM NETWORK &nbsp;|&nbsp; 
-            <span style="color:#aaa;">Users Online:</span>&nbsp; <span id="user-count" style="font-weight:bold;">1,000,000</span>
-            <i class="fas fa-circle live-badge" style="font-size:0.5rem;"></i>
+        <div>
+            <span class="live-dot"></span> <span style="font-weight:bold; color:var(--primary);">GLOBAL SERVER</span>
+            <span style="color:#666; margin:0 10px;">|</span>
+            Users: <span id="users-cnt" style="color:white;">9,430,211</span>
         </div>
-        <div id="clock">12:00 PM</div>
+        <div id="clock">12:00</div>
     </div>
 
-    <!-- الإقلاع -->
-    <div id="boot-screen">
-        <div class="empire-logo">HATIM EMPIRE</div>
-        <div style="color:#888;">CONNECTING TO GLOBAL SERVERS...</div>
-    </div>
-
-    <!-- الواجهة -->
+    <!-- سطح المكتب -->
     <div id="desktop"></div>
     <div id="win-layer"></div>
 
-    <!-- شريط المهام -->
     <div id="taskbar">
-        <div class="start-btn" onclick="openApp('store')"><i class="fab fa-fort-awesome"></i></div>
+        <div class="start-btn" onclick="openWin('store')"><i class="fab fa-fort-awesome"></i></div>
         <div class="dock" id="dock"></div>
-        <div style="font-size:0.8rem; color:#aaa;">v 10.0 Ultimate</div>
+        <div style="font-size:0.8rem; color:#666;">Hatim OS v12.0</div>
     </div>
 
     <script>
-        // --- 1. النظام المركزي ---
+        // --- Core Data ---
         const sys = {
-            key: 'hatim_empire_v1',
-            apps: [], // التطبيقات المثبتة
-            zIndex: 100
+            apps: [], 
+            zIndex: 100,
+            storageKey: 'hatim_global_v2'
         };
 
         const db = {
             'store': { name: 'المتجر الملكي', icon: 'fas fa-store', color: '#d4af37', core: true, render: renderStore },
-            'writer': { name: 'H-Writer', icon: 'fas fa-paragraph', color: '#2b5797', render: renderWriter },
-            'sheets': { name: 'H-Sheets', icon: 'fas fa-table', color: '#185c37', render: renderSheets },
-            'chat': { name: 'H-Chat Global', icon: 'fab fa-whatsapp', color: '#25d366', render: renderChat, init: initChat },
-            'media': { name: 'H-Media', icon: 'fas fa-play-circle', color: '#ff0055', render: renderMedia },
-            'gallery': { name: 'H-Gallery', icon: 'fas fa-images', color: '#e040fb', render: renderGallery },
-            'browser': { name: 'المتصفح', icon: 'fas fa-globe', color: '#00d4ff', type: 'iframe', url: 'https://www.wikipedia.org' }
+            'files': { name: 'ملفاتي (H-Files)', icon: 'fas fa-folder-open', color: '#ffca28', core: true, render: renderFiles, init: initFiles },
+            'chat': { name: 'H-Chat', icon: 'fab fa-whatsapp', color: '#25d366', render: renderChat, init: initChat },
+            'writer': { name: 'H-Writer', icon: 'fas fa-pen-fancy', color: '#2979ff', render: renderWriter },
+            'sheets': { name: 'H-Sheets', icon: 'fas fa-table', color: '#43a047', render: renderSheets },
+            'media': { name: 'H-Media', icon: 'fas fa-play-circle', color: '#f50057', render: renderMedia },
+            'gallery': { name: 'المعرض', icon: 'fas fa-images', color: '#aa00ff', render: renderGallery },
+            'browser': { name: 'انترنت', icon: 'fas fa-globe', color: '#00b0ff', type: 'iframe', url: 'https://www.wikipedia.org' }
         };
 
-        // --- 2. الإقلاع ---
+        // --- File System Data (Simulated) ---
+        let fileSystem = [
+            { id: 1, parent: 'root', name: 'خطط سرية', type: 'folder' },
+            { id: 2, parent: 'root', name: 'صور المعجبين', type: 'folder' },
+            { id: 3, parent: 'root', name: 'أكواد نووية.txt', type: 'file' },
+            { id: 4, parent: 'root', name: 'رسالة من إيلون ماسك.txt', type: 'file' },
+            { id: 5, parent: 1, name: 'خطة 2030.txt', type: 'file' }
+        ];
+
+        // --- Init ---
         window.onload = () => {
-            loadSys();
-            liveCounter();
-            updateClock();
-            setTimeout(() => {
-                document.getElementById('boot-screen').style.opacity = '0';
-                setTimeout(() => document.getElementById('boot-screen').style.display = 'none', 1000);
-            }, 3000);
-        };
-
-        function loadSys() {
-            const saved = localStorage.getItem(sys.key);
-            sys.apps = saved ? JSON.parse(saved) : ['store', 'chat', 'writer']; // افتراضيا
+            const saved = localStorage.getItem(sys.storageKey);
+            sys.apps = saved ? JSON.parse(saved) : ['store', 'files', 'chat'];
             refreshDesk();
-        }
+            updateStats();
+        };
 
         function refreshDesk() {
             const d = document.getElementById('desktop');
@@ -218,156 +204,7 @@
             });
         }
 
-        // --- 3. المتجر ---
-        function renderStore() {
-            let h = `<div class="store-grid">`;
-            Object.keys(db).forEach(k => {
-                if(k === 'store') return;
-                const installed = sys.apps.includes(k);
-                h += `
-                <div class="store-item">
-                    <i class="${db[k].icon}" style="font-size:2rem; color:${db[k].color}; margin-bottom:10px;"></i>
-                    <div style="font-weight:bold">${db[k].name}</div>
-                    <button class="install-btn" style="background:${installed?'#333':''}" onclick="${installed?'':'install(\''+k+'\')'}">
-                        ${installed ? 'مثبت' : 'تثبيت'}
-                    </button>
-                </div>`;
-            });
-            return h + `</div>`;
-        }
-
-        function install(id) {
-            sys.apps.push(id);
-            localStorage.setItem(sys.key, JSON.stringify(sys.apps));
-            refreshDesk();
-            // تحديث نافذة المتجر المفتوحة
-            document.querySelectorAll('.window').forEach(w => {
-                if(w.querySelector('.store-grid')) w.querySelector('.win-body').innerHTML = renderStore();
-            });
-        }
-        
-        function uninstall(id) {
-            if(confirm('حذف التطبيق؟')) {
-                sys.apps = sys.apps.filter(x => x !== id);
-                localStorage.setItem(sys.key, JSON.stringify(sys.apps));
-                refreshDesk();
-            }
-        }
-
-        // --- 4. H-Office ---
-        function renderWriter(wid) {
-            return `
-            <div style="display:flex; flex-direction:column; height:100%;">
-                <div class="writer-toolbar">
-                    <button class="writer-btn" onclick="document.execCommand('bold')"><b>B</b></button>
-                    <button class="writer-btn" onclick="document.execCommand('italic')"><i>I</i></button>
-                    <button class="writer-btn" onclick="document.execCommand('underline')"><u>U</u></button>
-                    <button class="writer-btn" onclick="document.execCommand('justifyLeft')"><i class="fas fa-align-left"></i></button>
-                    <button class="writer-btn" style="margin-right:auto; background:var(--primary);" onclick="alert('تم الحفظ في السحابة الملكية ☁️')">حفظ</button>
-                </div>
-                <div class="writer-paper" contenteditable="true"><h1>مشروع جديد</h1><p>ابدأ الكتابة هنا...</p></div>
-            </div>`;
-        }
-
-        function renderSheets(wid) {
-            let table = '<table border="1" style="width:100%; border-collapse:collapse; border-color:#444;">';
-            for(let i=0; i<10; i++) {
-                table += '<tr>';
-                for(let j=0; j<5; j++) {
-                    table += `<td contenteditable="true" style="padding:5px; background:${i==0?'#333':'transparent'}; color:${i==0?'var(--primary)':'white'}; text-align:center;">${i==0 ? 'Col '+(j+1) : ''}</td>`;
-                }
-                table += '</tr>';
-            }
-            return `<div style="padding:20px; overflow:auto;">${table}</table></div>`;
-        }
-
-        // --- 5. H-Chat Global (محاكاة الشهرة) ---
-        function renderChat(wid) {
-            return `
-            <div class="chat-layout">
-                <div class="chat-sidebar">
-                    <div class="chat-contact" style="background:#222;"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Hatim"> <b>الرئيسية (Global)</b></div>
-                    <div class="chat-contact"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Elon"> <b>Elon Musk</b></div>
-                    <div class="chat-contact"><img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bill"> <b>Bill Gates</b></div>
-                </div>
-                <div class="chat-main">
-                    <div class="chat-msgs" id="chat-feed-${wid}"></div>
-                    <div style="padding:10px; background:#111; display:flex; gap:10px;">
-                        <input type="text" id="chat-in-${wid}" style="flex:1; padding:10px; border-radius:20px; border:none;" placeholder="اكتب رسالة للعالم..." onkeypress="if(event.key==='Enter') sendMsg('${wid}')">
-                        <button onclick="sendMsg('${wid}')" style="background:var(--primary); border:none; width:40px; border-radius:50%; cursor:pointer;"><i class="fas fa-paper-plane"></i></button>
-                    </div>
-                </div>
-            </div>`;
-        }
-
-        function initChat(wid) {
-            const feed = document.getElementById(`chat-feed-${wid}`);
-            // رسائل وهمية أولية
-            feed.innerHTML = `
-                <div class="chat-bubble in" style="background:#333; font-size:0.8rem; text-align:center; align-self:center; max-width:100%;">تم تشفير الرسائل بينك وبين معجبيك</div>
-                <div class="chat-bubble in">Hello Hatim! Big fan from USA! 🇺🇸</div>
-            `;
-            
-            // محاكاة وصول رسائل عشوائية
-            setInterval(() => {
-                const randomMsgs = [
-                    "مرحباً حاتم، نظامك رائع! 🇸🇦",
-                    "Love the design! greetings from Germany 🇩🇪",
-                    "هل يمكنك إضافتي كمطور؟",
-                    "أفضل نظام تشغيل في 2026! 🚀",
-                    "こんにちは (Konnichiwa) from Japan 🇯🇵"
-                ];
-                if(Math.random() > 0.7) { // 30% فرصة
-                    const msg = randomMsgs[Math.floor(Math.random() * randomMsgs.length)];
-                    feed.innerHTML += `<div class="chat-bubble in">${msg}</div>`;
-                    feed.scrollTop = feed.scrollHeight;
-                }
-            }, 3000);
-        }
-
-        function sendMsg(wid) {
-            const inp = document.getElementById(`chat-in-${wid}`);
-            const feed = document.getElementById(`chat-feed-${wid}`);
-            if(!inp.value) return;
-            feed.innerHTML += `<div class="chat-bubble out">${inp.value}</div>`;
-            inp.value = '';
-            feed.scrollTop = feed.scrollHeight;
-        }
-
-        // --- 6. Media & Gallery ---
-        function renderMedia(wid) {
-            return `
-            <div style="display:flex; flex-direction:column; height:100%; background:black;">
-                <div style="padding:10px; display:flex; gap:10px;">
-                    <input type="text" id="vid-url-${wid}" placeholder="رابط يوتيوب (أو اترك فارغاً للتجربة)" style="flex:1; padding:5px; background:#222; border:1px solid #444; color:white;">
-                    <button onclick="playVid('${wid}')" style="background:var(--primary); border:none; color:white; padding:5px 15px; cursor:pointer;">تشغيل</button>
-                </div>
-                <iframe id="vid-frame-${wid}" style="flex:1; border:none;" src="https://www.youtube.com/embed/LXb3EKWsInQ?autoplay=1&mute=1"></iframe>
-            </div>`;
-        }
-        function playVid(wid) {
-            const url = document.getElementById(`vid-url-${wid}`).value;
-            const frame = document.getElementById(`vid-frame-${wid}`);
-            if(url.includes('v=')) {
-                const id = url.split('v=')[1].split('&')[0];
-                frame.src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            }
-        }
-
-        function renderGallery(wid) {
-            const images = [
-                'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=400',
-                'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=400',
-                'https://images.unsplash.com/photo-1511765224389-37f0e77cf0ad?w=400',
-                'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400'
-            ];
-            return `
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px,1fr)); gap:10px; padding:10px;">
-                ${images.map(src => `<div style="height:150px; background:url('${src}') center/cover; border-radius:10px; cursor:pointer; transition:0.3s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"></div>`).join('')}
-            </div>`;
-        }
-
-        // --- 7. Window Manager ---
+        // --- Window Manager ---
         function openWin(id) {
             const app = db[id];
             const wid = 'win-' + Date.now();
@@ -375,12 +212,12 @@
             w.className = 'window';
             w.id = wid;
             w.style.zIndex = ++sys.zIndex;
-            w.style.width = '700px'; w.style.height = '500px';
-            w.style.left = (50 + Math.random()*50)+'px'; w.style.top = (80 + Math.random()*50)+'px';
+            w.style.left = (50+Math.random()*50)+'px'; w.style.top=(50+Math.random()*50)+'px';
+            w.style.width = '750px'; w.style.height='500px';
 
-            let body = '';
-            if(app.type === 'iframe') body = `<iframe src="${app.url}" style="width:100%; height:100%; border:none;"></iframe>`;
-            else if(app.render) body = app.render(wid);
+            let content = '';
+            if(app.type === 'iframe') content = `<iframe src="${app.url}" style="width:100%; height:100%; border:none;"></iframe>`;
+            else if(app.render) content = app.render(wid);
 
             w.innerHTML = `
                 <div class="win-header" onmousedown="drag(event, '${wid}')">
@@ -389,8 +226,8 @@
                         <div class="win-btn close" onclick="closeWin('${wid}')"></div>
                     </div>
                 </div>
-                <div class="win-body">${body}</div>`;
-            
+                <div class="win-body">${content}</div>
+            `;
             w.onmousedown = () => w.style.zIndex = ++sys.zIndex;
             document.getElementById('win-layer').appendChild(w);
             addDock(wid, app);
@@ -404,7 +241,7 @@
 
         function addDock(wid, app) {
             const d = document.getElementById('dock');
-            d.innerHTML += `<div class="dock-item active" id="dock-${wid}" onclick="document.getElementById('${wid}').style.zIndex=++sys.zIndex"><i class="${app.icon}" style="color:${app.color}"></i></div>`;
+            d.innerHTML += `<div class="dock-item active" id="dock-${wid}"><i class="${app.icon}" style="color:${app.color}"></i></div>`;
         }
 
         function drag(e, wid) {
@@ -412,28 +249,178 @@
             const w = document.getElementById(wid);
             const dx = e.clientX - w.offsetLeft;
             const dy = e.clientY - w.offsetTop;
-            document.onmousemove = (ev) => { w.style.left = (ev.clientX - dx) + 'px'; w.style.top = (ev.clientY - dy) + 'px'; };
+            document.onmousemove = (ev) => { w.style.left = (ev.clientX-dx)+'px'; w.style.top=(ev.clientY-dy)+'px'; };
             document.onmouseup = () => document.onmousemove = null;
         }
 
-        // --- 8. Utilities ---
-        function liveCounter() {
-            let count = 1000000;
-            const el = document.getElementById('user-count');
+        // --- H-Files Logic ---
+        function renderFiles(wid) {
+            return `
+            <div class="fm-layout">
+                <div class="fm-sidebar">
+                    <div class="fm-side-item active"><i class="fas fa-hdd"></i> القرص C:</div>
+                    <div class="fm-side-item"><i class="fas fa-cloud"></i> السحابة</div>
+                    <div class="fm-side-item"><i class="fas fa-trash"></i> المحذوفات</div>
+                </div>
+                <div class="fm-main">
+                    <div class="fm-toolbar">
+                        <button class="fm-btn" onclick="fmUp('${wid}')"><i class="fas fa-arrow-up"></i></button>
+                        <div class="fm-path" id="path-${wid}">Root</div>
+                        <button class="fm-btn" onclick="fmNewFolder('${wid}')"><i class="fas fa-folder-plus"></i></button>
+                        <button class="fm-btn" onclick="fmNewFile('${wid}')"><i class="fas fa-file-alt"></i></button>
+                    </div>
+                    <div class="fm-grid" id="grid-${wid}"></div>
+                </div>
+            </div>`;
+        }
+
+        // تخزين الحالة المحلية لكل نافذة ملفات
+        const fmStates = {}; 
+
+        function initFiles(wid) {
+            fmStates[wid] = { current: 'root' };
+            refreshFiles(wid);
+        }
+
+        function refreshFiles(wid) {
+            const state = fmStates[wid];
+            const grid = document.getElementById(`grid-${wid}`);
+            const pathEl = document.getElementById(`path-${wid}`);
+            
+            // تصفية الملفات
+            const items = fileSystem.filter(i => i.parent == state.current);
+            
+            // تحديث المسار
+            pathEl.innerText = state.current === 'root' ? 'Computer' : `Computer > Folder ${state.current}`;
+
+            grid.innerHTML = '';
+            items.forEach(item => {
+                const icon = item.type === 'folder' ? 'fas fa-folder' : 'fas fa-file-alt';
+                const color = item.type === 'folder' ? '#ffca28' : '#eee';
+                const action = item.type === 'folder' ? `onclick="fmEnter('${wid}', ${item.id})"` : `onclick="alert('فتح الملف: ${item.name}')"`;
+                
+                grid.innerHTML += `
+                <div class="file-item" ${action}>
+                    <i class="${icon} file-icon" style="color:${color}"></i>
+                    <div class="file-name">${item.name}</div>
+                </div>`;
+            });
+            
+            if(items.length === 0) grid.innerHTML = '<div style="color:#666; width:100%; text-align:center; padding:20px;">المجلد فارغ</div>';
+        }
+
+        function fmEnter(wid, id) {
+            fmStates[wid].current = id;
+            refreshFiles(wid);
+        }
+
+        function fmUp(wid) {
+            const state = fmStates[wid];
+            if(state.current === 'root') return;
+            // بحث بسيط عن الأب (للتبسيط سنعود للروت دائماً هنا)
+            const currItem = fileSystem.find(i => i.id == state.current);
+            state.current = currItem ? currItem.parent : 'root';
+            refreshFiles(wid);
+        }
+
+        function fmNewFolder(wid) {
+            const name = prompt('اسم المجلد:');
+            if(name) {
+                fileSystem.push({ id: Date.now(), parent: fmStates[wid].current, name: name, type: 'folder' });
+                refreshFiles(wid);
+            }
+        }
+        function fmNewFile(wid) {
+            const name = prompt('اسم الملف:');
+            if(name) {
+                fileSystem.push({ id: Date.now(), parent: fmStates[wid].current, name: name + '.txt', type: 'file' });
+                refreshFiles(wid);
+            }
+        }
+
+        // --- Apps Logic ---
+        function renderStore() {
+            let h = `<div class="store-grid">`;
+            Object.keys(db).forEach(k => {
+                if(k === 'store') return;
+                const inst = sys.apps.includes(k);
+                h += `
+                <div class="store-item">
+                    <i class="${db[k].icon}" style="font-size:2rem;color:${db[k].color};margin-bottom:10px;"></i>
+                    <div style="font-weight:bold">${db[k].name}</div>
+                    <button onclick="${inst?'':'install(\''+k+'\')'}" style="margin-top:10px; padding:5px 15px; border:none; background:${inst?'#333':db[k].color}; color:${inst?'#888':'white'}; border-radius:5px; cursor:pointer;">
+                        ${inst ? 'مثبت' : 'تثبيت'}
+                    </button>
+                </div>`;
+            });
+            return h + '</div>';
+        }
+
+        function install(k) {
+            sys.apps.push(k);
+            localStorage.setItem(sys.storageKey, JSON.stringify(sys.apps));
+            refreshDesk();
+            // تحديث النوافذ المفتوحة للمتجر
+            document.querySelectorAll('.window').forEach(w => { if(w.querySelector('.store-grid')) w.querySelector('.win-body').innerHTML = renderStore(); });
+        }
+        function uninstall(k) {
+            sys.apps = sys.apps.filter(x => x!==k);
+            localStorage.setItem(sys.storageKey, JSON.stringify(sys.apps));
+            refreshDesk();
+        }
+
+        function renderChat(wid) {
+            return `
+            <div class="chat-layout">
+                <div class="chat-sidebar">
+                    <div class="chat-contact" style="background:#222;"><b>المحادثات العالمية</b></div>
+                    <div class="chat-contact"><i class="fas fa-user-circle"></i> Elon Musk</div>
+                    <div class="chat-contact"><i class="fas fa-user-circle"></i> Mark Z.</div>
+                    <div class="chat-contact"><i class="fas fa-user-circle"></i> Hatim Fans</div>
+                </div>
+                <div class="chat-msgs" id="chat-msgs-${wid}"></div>
+            </div>`;
+        }
+
+        function initChat(wid) {
+            const el = document.getElementById(`chat-msgs-${wid}`);
+            el.innerHTML = `<div class="chat-bubble in" style="background:var(--primary); color:black;">مرحباً أيها القائد حاتم! العالم بانتظارك.</div>`;
             setInterval(() => {
-                count += Math.floor(Math.random() * 50) - 20;
-                el.innerText = count.toLocaleString();
-            }, 2000);
+                const msgs = ["Hi Hatim! 🇺🇸", "Big Fan! 🇯🇵", "أحب نظامك! 🇸🇦", "Can I invest? 💸"];
+                if(Math.random() > 0.7) {
+                    el.innerHTML += `<div class="chat-bubble in">${msgs[Math.floor(Math.random()*msgs.length)]}</div>`;
+                    el.scrollTop = el.scrollHeight;
+                }
+            }, 4000);
         }
 
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
-            setTimeout(updateClock, 1000);
+        function renderWriter() { return `<textarea style="width:100%; height:100%; background:white; color:black; padding:20px; border:none; font-size:1.1rem; outline:none;" placeholder="اكتب المستند هنا..."></textarea>`; }
+        
+        function renderSheets() { 
+            let t = '<table border="1" style="width:100%; border-collapse:collapse; border-color:#555;">';
+            for(let r=0; r<15; r++) { t+='<tr>'; for(let c=0;c<5;c++) { t+=`<td contenteditable style="padding:5px; text-align:center; color:${r===0?'var(--primary)':'white'}">${r===0?'Title':''}</td>`; } t+='</tr>'; }
+            return `<div style="overflow:auto; height:100%; padding:10px;">${t}</table></div>`;
         }
 
+        function renderGallery() {
+            return `<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:10px;">
+                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0ad?w=300" style="width:100%; border-radius:5px;">
+                <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=300" style="width:100%; border-radius:5px;">
+                <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=300" style="width:100%; border-radius:5px;">
+            </div>`;
+        }
+
+        function renderMedia() { return `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/jfKfPfyJRdk" frameborder="0"></iframe>`; }
+
+        // --- Misc ---
+        function updateStats() {
+            const el = document.getElementById('users-cnt');
+            let cnt = 9430211;
+            setInterval(() => { cnt += Math.floor(Math.random()*100)-30; el.innerText = cnt.toLocaleString(); }, 2000);
+            
+            const clock = document.getElementById('clock');
+            setInterval(() => { clock.innerText = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}); }, 1000);
+        }
     </script>
 </body>
 </html>
-            
-
