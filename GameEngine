@@ -1,0 +1,7 @@
+GameEngine
+ ├─ start()
+ ├─ pause()
+ ├─ resume()
+ ├─ stop()
+ ├─ loop()
+ ├─ calculateFPS()
