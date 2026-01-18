@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hatim OS Infinity - Global Ultimate</title>
+    <title>Hatim OS Infinity - Camera Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         :root {
             --accent: #00f2ff; --glass: rgba(15, 15, 15, 0.9);
             --border: rgba(255, 255, 255, 0.1); --shadow: 0 15px 40px rgba(0,0,0,0.6);
         }
-        * { box-sizing: border-box; transition: direction 0.3s, transform 0.2s; }
+        * { box-sizing: border-box; transition: transform 0.2s; }
         body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; color: white; }
 
         /* شاشة القفل */
         #lock-screen {
             position: fixed; inset: 0; z-index: 10000;
-            background: url('https://w.wallhaven.cc/full/zy/wallhaven-zyxv8w.jpg') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://w.wallhaven.cc/full/zy/wallhaven-zyxv8w.jpg') center/cover;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
         }
-        #lock-clock { font-size: 90px; font-weight: 200; margin: 0; }
+        #lock-clock { font-size: 90px; font-weight: 200; margin-bottom: 20px; text-shadow: 0 0 20px rgba(0,0,0,0.5); }
 
         /* سطح المكتب */
         #desktop {
@@ -27,34 +28,32 @@
             background: url('https://w.wallhaven.cc/full/j3/wallhaven-j3m8p9.jpg') center/cover;
             display: none;
         }
-        .icons-layer { display: grid; grid-template-columns: repeat(auto-fill, 110px); gap: 20px; padding: 40px; }
+        .icons-layer { display: grid; grid-template-columns: repeat(auto-fill, 100px); gap: 20px; padding: 40px; }
         .app-icon { display: flex; flex-direction: column; align-items: center; cursor: pointer; text-align: center; }
-        .icon-shape { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 8px; box-shadow: var(--shadow); }
+        .icon-shape { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 8px; box-shadow: var(--shadow); }
 
         /* النوافذ */
         .window {
-            position: absolute; min-width: 450px; min-height: 350px;
-            background: var(--glass); backdrop-filter: blur(20px);
-            border-radius: 12px; border: 1px solid var(--border);
+            position: absolute; min-width: 400px; min-height: 300px;
+            background: var(--glass); backdrop-filter: blur(25px);
+            border-radius: 15px; border: 1px solid var(--border);
             display: flex; flex-direction: column; box-shadow: var(--shadow); overflow: hidden;
         }
-        .win-header { padding: 12px; background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; cursor: move; align-items: center; }
-        .win-body { flex: 1; overflow: auto; padding: 15px; }
-        .close-btn { background: #ff5f56; width: 15px; height: 15px; border-radius: 50%; cursor: pointer; }
+        .win-header { padding: 12px; background: rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; cursor: move; }
+        .win-body { flex: 1; overflow: auto; display: flex; flex-direction: column; }
+        .close-btn { background: #ff5f56; width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: none; }
+
+        /* تطبيق الكاميرا */
+        #cam-video { width: 100%; height: 100%; background: #000; object-fit: cover; }
 
         /* شريط المهام */
         #taskbar {
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-            background: var(--glass); border: 1px solid var(--border);
-            padding: 8px 25px; border-radius: 30px; display: flex; gap: 20px; align-items: center; z-index: 9999;
+            position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+            background: rgba(10,10,10,0.8); backdrop-filter: blur(20px);
+            padding: 8px 25px; border-radius: 40px; display: flex; gap: 20px; align-items: center; border: 1px solid var(--border); z-index: 9999;
         }
+        .dock-item { font-size: 24px; color: var(--accent); cursor: pointer; }
 
-        /* المتجر */
-        .store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .store-card { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
-        .btn-install { background: var(--accent); color: black; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 12px; }
-
-        /* اللغة */
         [dir="ltr"] .win-header { flex-direction: row-reverse; }
     </style>
 </head>
@@ -62,11 +61,11 @@
 
     <div id="lock-screen">
         <h1 id="lock-clock">00:00</h1>
-        <div style="background: var(--glass); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid var(--border);">
-            <i class="fas fa-user-circle" style="font-size: 50px; color: var(--accent);"></i>
-            <div id="lock-text" style="margin: 15px 0;">أدخل كلمة المرور</div>
-            <input type="password" id="pass-field" style="width: 100%; padding: 10px; border-radius: 10px; border: none; background: #222; color: white; text-align: center;">
-            <button onclick="OS.login()" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px; border: none; background: var(--accent); cursor: pointer; font-weight: bold;">دخول / Login</button>
+        <div style="background: var(--glass); padding: 30px; border-radius: 25px; text-align: center; border: 1px solid var(--border); width: 300px;">
+            <i class="fas fa-user-astronaut" style="font-size: 50px; color: var(--accent); margin-bottom: 10px;"></i>
+            <div id="lock-msg">أهلاً بك في Hatim OS</div>
+            <input type="password" id="pass-field" placeholder="كلمة المرور" style="width: 100%; padding: 12px; border-radius: 12px; border: none; background: #222; color: white; text-align: center; margin: 15px 0;">
+            <button onclick="OS.login()" style="width: 100%; padding: 12px; border-radius: 12px; border: none; background: var(--accent); cursor: pointer; font-weight: bold;">دخول / Login</button>
         </div>
     </div>
 
@@ -75,46 +74,30 @@
         <div id="window-manager"></div>
 
         <div id="taskbar">
-            <i class="fas fa-store" style="color:var(--accent); cursor:pointer; font-size: 20px;" onclick="OS.openApp('Store')"></i>
+            <i class="fas fa-shapes dock-item" onclick="OS.openApp('Store')"></i>
             <div id="task-icons" style="display:flex; gap:15px;"></div>
-            <div id="sys-time" style="font-size: 14px; margin-right: 15px;">00:00</div>
+            <div style="width:1px; height:20px; background:var(--border)"></div>
+            <div id="sys-time" style="font-size: 14px; font-weight: bold;">00:00</div>
         </div>
     </div>
 
     <script>
         const OS = {
-            lang: 'ar',
-            z: 100,
-            pass: localStorage.getItem('hos_pass'),
-            installed: ['Store', 'Settings', 'Browser'],
-            
-            // قاموس اللغات
-            dict: {
-                ar: { lock: "أدخل كلمة المرور", settings: "الإعدادات", store: "المتجر", browser: "المتصفح", notes: "الملاحظات", paint: "الرسام", calc: "الحاسبة", video: "الفيديو", snake: "الثعبان", files: "ملفاتي", weather: "الطقس", install: "تثبيت", reset: "إعادة ضبط", lang: "English" },
-                en: { lock: "Enter Password", settings: "Settings", store: "Store", browser: "Browser", notes: "Notes", paint: "Paint", calc: "Calculator", video: "Video", snake: "Snake", files: "Files", weather: "Weather", install: "Install", reset: "Factory Reset", lang: "العربية" }
-            },
-
-            // قاعدة بيانات التطبيقات
+            lang: 'ar', z: 100, pass: localStorage.getItem('hos_pass'),
+            installed: ['Store', 'Camera', 'Browser', 'Settings'],
             appDB: {
-                'Store': { name_ar: 'المتجر', name_en: 'Store', icon: 'fa-shopping-cart', bg: '#00f2ff' },
-                'Settings': { name_ar: 'الإعدادات', name_en: 'Settings', icon: 'fa-cog', bg: '#607d8b' },
-                'Browser': { name_ar: 'المتصفح', name_en: 'Browser', icon: 'fa-globe', bg: '#4285f4' },
-                'Notes': { name_ar: 'الملاحظات', name_en: 'Notes', icon: 'fa-file-alt', bg: '#ff9800' },
-                'Paint': { name_ar: 'الرسام', name_en: 'Paint', icon: 'fa-paint-brush', bg: '#e91e63' },
-                'Calc': { name_ar: 'الحاسبة', name_en: 'Calculator', icon: 'fa-calculator', bg: '#4caf50' },
-                'Video': { name_ar: 'الفيديو', name_en: 'Video', icon: 'fa-play', bg: '#f44336' },
-                'Snake': { name_ar: 'لعبة الثعبان', name_en: 'Snake', icon: 'fa-gamepad', bg: '#8bc34a' },
-                'Files': { name_ar: 'ملفاتي', name_en: 'Files', icon: 'fa-folder-open', bg: '#ffc107' },
-                'Weather': { name_ar: 'الطقس', name_en: 'Weather', icon: 'fa-cloud-sun', bg: '#03a9f4' }
+                'Store': { ar: 'المتجر', en: 'Store', icon: 'fa-shopping-bag', bg: '#00f2ff' },
+                'Camera': { ar: 'الكاميرا', en: 'Camera', icon: 'fa-camera', bg: '#ff007f' },
+                'Browser': { ar: 'المتصفح', en: 'Browser', icon: 'fa-globe', bg: '#4285f4' },
+                'Settings': { ar: 'الإعدادات', en: 'Settings', icon: 'fa-cog', bg: '#607d8b' },
+                'Notes': { ar: 'الملاحظات', en: 'Notes', icon: 'fa-file-alt', bg: '#ff9800' }
             },
 
             init() {
                 this.updateClock();
                 setInterval(() => this.updateClock(), 1000);
-                if(!this.pass) {
-                    document.getElementById('lock-text').innerText = "أنشئ كلمة مرورك الجديدة";
-                }
-                this.render();
+                if(!this.pass) document.getElementById('lock-msg').innerText = "قم بإنشاء كلمة مرورك";
+                this.renderIcons();
             },
 
             updateClock() {
@@ -130,25 +113,15 @@
                     localStorage.setItem('hos_pass', val);
                     location.reload();
                 } else if(val === this.pass) {
-                    document.getElementById('lock-screen').style.opacity = "0";
+                    document.getElementById('lock-screen').style.transform = "translateY(-100%)";
                     setTimeout(() => {
                         document.getElementById('lock-screen').style.display = "none";
                         document.getElementById('desktop').style.display = "block";
-                    }, 500);
+                    }, 800);
                 }
             },
 
-            toggleLang() {
-                this.lang = (this.lang === 'ar' ? 'en' : 'ar');
-                const root = document.getElementById('os-root');
-                root.dir = (this.lang === 'ar' ? 'rtl' : 'ltr');
-                root.lang = this.lang;
-                this.render();
-                // إعادة رسم النوافذ المفتوحة
-                document.getElementById('window-manager').innerHTML = "";
-            },
-
-            render() {
+            renderIcons() {
                 const grid = document.getElementById('desktop-icons');
                 grid.innerHTML = "";
                 this.installed.forEach(id => {
@@ -156,7 +129,7 @@
                     grid.innerHTML += `
                         <div class="app-icon" onclick="OS.openApp('${id}')">
                             <div class="icon-shape" style="background:${app.bg}"><i class="fas ${app.icon}"></i></div>
-                            <span>${this.lang === 'ar' ? app.name_ar : app.name_en}</span>
+                            <span>${this.lang === 'ar' ? app.ar : app.en}</span>
                         </div>`;
                 });
             },
@@ -165,59 +138,62 @@
                 if(document.getElementById('win-'+id)) return;
                 const win = document.createElement('div');
                 win.className = "window"; win.id = 'win-'+id;
-                win.style.zIndex = ++this.z; win.style.top = "100px"; win.style.left = "150px";
+                win.style.zIndex = ++this.z; win.style.top = "80px"; win.style.left = "100px";
                 
                 win.innerHTML = `
                     <div class="win-header" onmousedown="OS.drag(event, this)">
-                        <div class="close-btn" onclick="OS.closeApp('${id}')"></div>
-                        <span>${this.lang === 'ar' ? this.appDB[id].name_ar : this.appDB[id].name_en}</span>
+                        <button class="close-btn" onclick="OS.closeApp('${id}')"></button>
+                        <span>${this.lang === 'ar' ? this.appDB[id].ar : this.appDB[id].en}</span>
                     </div>
-                    <div class="win-body">${this.getUI(id)}</div>`;
+                    <div class="win-body" id="body-${id}">${this.getUI(id)}</div>`;
                 document.getElementById('window-manager').appendChild(win);
+                if(id === 'Camera') this.startCamera();
             },
 
             getUI(id) {
-                const d = this.dict[this.lang];
-                if(id === 'Store') {
-                    let html = `<div class="store-grid">`;
-                    Object.keys(this.appDB).forEach(k => {
-                        html += `<div class="store-card">
-                            <i class="fas ${this.appDB[k].icon}"></i>
-                            <div style="flex:1">${this.lang === 'ar' ? this.appDB[k].name_ar : this.appDB[k].name_en}</div>
-                            <button class="btn-install" onclick="OS.install('${k}')">${d.install}</button>
-                        </div>`;
-                    });
-                    return html + `</div>`;
-                }
-                if(id === 'Settings') {
-                    return `
-                        <button class="btn-install" style="width:100%; padding:15px; margin-bottom:10px;" onclick="OS.toggleLang()"><i class="fas fa-language"></i> ${d.lang}</button>
-                        <button class="btn-install" style="width:100%; padding:15px; background:red; color:white;" onclick="OS.reset()">${d.reset}</button>
-                    `;
-                }
+                if(id === 'Camera') return `<video id="cam-video" autoplay playsinline></video>`;
                 if(id === 'Browser') return `<iframe src="https://www.google.com/search?igu=1" style="width:100%; height:400px; border:none; background:white;"></iframe>`;
-                if(id === 'Notes') return `<textarea style="width:100%; height:300px; background:transparent; color:white; border:none; outline:none;" placeholder="..."></textarea>`;
-                return `<div style="text-align:center; padding:50px;">App ${id} is running</div>`;
+                if(id === 'Settings') return `<div style="padding:20px; text-align:center;">
+                    <button onclick="OS.toggleLang()" style="width:100%; padding:10px; background:var(--accent); border:none; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:10px;">Change Language / تغيير اللغة</button>
+                    <button onclick="OS.reset()" style="width:100%; padding:10px; background:#ff5f56; border:none; border-radius:8px; cursor:pointer; color:white;">Format System / مسح النظام</button>
+                </div>`;
+                if(id === 'Store') return `<div style="padding:15px;">${Object.keys(this.appDB).map(k => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; background:rgba(255,255,255,0.05); padding:10px; border-radius:10px;"><span>${this.lang === 'ar' ? this.appDB[k].ar : this.appDB[k].en}</span><button onclick="OS.install('${k}')" style="background:var(--accent); border:none; border-radius:5px; cursor:pointer; padding:5px 10px;">Get</button></div>`).join('')}</div>`;
+                return `<div style="padding:20px;">App Content</div>`;
+            },
+
+            startCamera() {
+                const video = document.getElementById('cam-video');
+                navigator.mediaDevices.getUserMedia({ video: true }).then(stream => { video.srcObject = stream; })
+                .catch(err => { alert("خطأ في الكاميرا: " + err); });
             },
 
             install(id) {
-                if(!this.installed.includes(id)) {
-                    this.installed.push(id);
-                    this.render();
-                    alert(this.lang === 'ar' ? "تم التثبيت!" : "Installed!");
-                }
+                if(!this.installed.includes(id)) { this.installed.push(id); this.renderIcons(); alert("Success!"); }
             },
 
-            closeApp(id) { document.getElementById('win-'+id).remove(); },
+            toggleLang() {
+                this.lang = this.lang === 'ar' ? 'en' : 'ar';
+                document.getElementById('os-root').dir = this.lang === 'ar' ? 'rtl' : 'ltr';
+                this.renderIcons();
+                document.getElementById('window-manager').innerHTML = "";
+            },
 
-            drag(e, header) {
-                const win = header.parentElement; win.style.zIndex = ++this.z;
+            closeApp(id) { 
+                if(id === 'Camera') {
+                    const v = document.getElementById('cam-video');
+                    if(v && v.srcObject) v.srcObject.getTracks().forEach(t => t.stop());
+                }
+                document.getElementById('win-'+id).remove(); 
+            },
+
+            drag(e, bar) {
+                const win = bar.parentElement; win.style.zIndex = ++this.z;
                 let ox = e.clientX - win.offsetLeft, oy = e.clientY - win.offsetTop;
                 document.onmousemove = (ev) => { win.style.left = ev.clientX - ox + "px"; win.style.top = ev.clientY - oy + "px"; };
                 document.onmouseup = () => document.onmousemove = null;
             },
 
-            reset() { if(confirm("Reset System?")) { localStorage.clear(); location.reload(); } }
+            reset() { if(confirm("Format?")) { localStorage.clear(); location.reload(); } }
         };
     </script>
 </body>
