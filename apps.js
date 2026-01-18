@@ -158,3 +158,66 @@ const HatimOS = {
         }
     }
 };
+const HOS = {
+    z: 100,
+    password: localStorage.getItem('hos_password'), // جلب كلمة المرور المخزنة
+    apps: {},
+    installed: JSON.parse(localStorage.getItem('installed_apps')) || ['Browser', 'Notes', 'Calculator'],
+
+    boot() {
+        this.createStars();
+        this.timer();
+        setInterval(() => this.timer(), 1000);
+        this.initApps();
+        this.renderDesktop();
+        
+        // التحقق من وجود كلمة مرور
+        const setupBox = document.getElementById("setup-box");
+        const loginBox = document.getElementById("login-box");
+
+        if (!this.password) {
+            setupBox.style.display = "block";
+            loginBox.style.display = "none";
+        } else {
+            setupBox.style.display = "none";
+            loginBox.style.display = "block";
+        }
+    },
+
+    // دالة إنشاء كلمة المرور لأول مرة
+    setupPassword() {
+        const newPass = document.getElementById("new-pass").value;
+        if (newPass.length < 4) {
+            alert("يرجى إدخال كلمة مرور مكونة من 4 رموز على الأقل");
+            return;
+        }
+        localStorage.setItem('hos_password', newPass); // حفظها في الذاكرة
+        this.password = newPass;
+        
+        alert("تم تعيين كلمة المرور بنجاح!");
+        document.getElementById("setup-box").style.display = "none";
+        document.getElementById("login-box").style.display = "block";
+    },
+
+    // دالة التحقق العادية
+    checkPassword() {
+        const val = document.getElementById("pass-field").value;
+        const screen = document.getElementById("lock-screen");
+        
+        if (val === this.password) {
+            screen.style.transform = "translateY(-100%)"; // حركة رفع الستارة
+            screen.style.opacity = "0";
+            setTimeout(() => screen.style.display = "none", 800);
+        } else {
+            const msg = document.getElementById("error-msg");
+            msg.innerText = "كلمة المرور التي أدخلتها غير صحيحة!";
+            document.getElementById("pass-field").value = "";
+            
+            // إضافة اهتزاز عند الخطأ
+            document.querySelector("#login-box .login-box").classList.add("shake");
+            setTimeout(() => document.querySelector("#login-box .login-box").classList.remove("shake"), 500);
+        }
+    },
+
+    // ... باقي الدوال (createStars, timer, openApp إلخ) تظل كما هي ...
+};
