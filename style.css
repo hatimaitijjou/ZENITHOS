@@ -1,32 +1,85 @@
-:root{
-  --bg:#050505;
-  --accent:#00d2ff;
-  --surface:rgba(15,15,15,0.7);
-  --border:rgba(255,255,255,0.1);
+:root {
+    --accent: #00d2ff;
+    --glass: rgba(20, 20, 20, 0.7);
+    --border: rgba(255, 255, 255, 0.1);
 }
 
-body,html{margin:0;padding:0;height:100%;font-family:sans-serif;color:white;overflow:hidden}
-#background{position:fixed;inset:0;background:radial-gradient(circle,#111,#000)}
-#desktop{position:absolute;inset:0;padding:20px;display:grid;grid-template-columns:repeat(auto-fill,100px);grid-auto-rows:100px;gap:15px;z-index:1}
-.icon{text-align:center;cursor:pointer;border-radius:15px;padding:10px;transition:.3s}
-.icon:hover{background:rgba(255,255,255,.05)}
-#taskbar{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:var(--surface);padding:10px 20px;border-radius:25px;display:flex;align-items:center;gap:10px;z-index:9999}
-#mini-clock{font-size:12px;color:#888}
+body {
+    margin: 0; padding: 0; height: 100vh;
+    background: #050505; color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+/* النجوم */
+.star {
+    position: absolute; width: 2px; height: 2px;
+    background: white; border-radius: 50%;
+    animation: blink 2s infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+/* سطح المكتب */
+#desktop {
+    padding: 30px; display: grid;
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px; gap: 20px;
+}
+
+.icon {
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; transition: 0.3s; padding: 10px; border-radius: 12px;
+}
+.icon:hover { background: rgba(255, 255, 255, 0.1); transform: scale(1.05); }
+.icon i { font-size: 40px; margin-bottom: 8px; }
+.icon span { font-size: 13px; text-shadow: 0 2px 4px black; }
 
 /* النوافذ */
-.window{position:absolute;background:var(--surface);border-radius:15px;border:1px solid var(--border);backdrop-filter:blur(20px);display:flex;flex-direction:column;overflow:hidden;z-index:10;width:500px;height:400px}
-.window .bar{padding:10px;background:rgba(255,255,255,.05);cursor:grab;display:flex;justify-content:space-between;align-items:center}
-.window .bar span{user-select:none}
-.window .body{flex:1;padding:10px;overflow:auto}
+.window {
+    position: absolute; width: 500px; height: 350px;
+    background: var(--glass); backdrop-filter: blur(15px);
+    border: 1px solid var(--border); border-radius: 12px;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    top: 100px; left: 100px;
+}
+.window .bar {
+    padding: 12px; background: rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; cursor: move;
+}
+.close-win { cursor: pointer; color: #ff5f56; font-weight: bold; }
+.window .body { flex: 1; padding: 10px; }
+
+/* شريط المهام */
+#taskbar {
+    position: fixed; bottom: 15px; left: 50%;
+    transform: translateX(-50%); background: var(--glass);
+    padding: 8px 25px; border-radius: 20px;
+    display: flex; align-items: center; gap: 20px;
+    backdrop-filter: blur(10px); border: 1px solid var(--border);
+}
+.start-btn { font-size: 22px; cursor: pointer; color: var(--accent); }
 
 /* شاشة القفل */
-#lock{position:fixed;inset:0;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:1s;z-index:9999}
-#clock{font-size:50px;margin:0}
-.brand{font-size:50px;margin-bottom:20px}
+#lock {
+    position: fixed; inset: 0; background: radial-gradient(circle at center, #111, #000);
+    z-index: 10000; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; transition: 1s cubic-bezier(0.8, 0, 0.2, 1);
+}
+.blink { animation: fade 1.5s infinite; color: var(--accent); }
+@keyframes fade { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-/* متجر التطبيقات */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.9);backdrop-filter:blur(50px);display:none;padding:50px;overflow-y:auto;z-index:99999}
-.store-header{display:flex;justify-content:space-between;margin-bottom:30px}
-.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:20px}
-.store-card{background:var(--surface);border:1px solid var(--border);border-radius:15px;padding:15px;text-align:center;cursor:pointer}
-.store-card button{margin-top:10px;padding:5px 10px;border-radius:15px;border:none;background:var(--accent);color:black;cursor:pointer}
+/* المتجر */
+.overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    z-index: 11000; display: none; padding: 50px;
+}
+.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+.store-card {
+    background: #111; padding: 20px; border-radius: 15px;
+    text-align: center; border: 1px solid var(--border);
+}
+.store-card button {
+    background: var(--accent); border: none; padding: 8px 15px;
+    border-radius: 8px; cursor: pointer; margin-top: 10px;
+}
