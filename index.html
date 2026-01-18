@@ -3,25 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HATIM OS ∞</title>
+<title>HATIM OS ∞ PWA</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+ --bg:#050505;
+ --surface:rgba(18,18,18,.7);
+ --accent:#00d2ff;
+ --border:rgba(255,255,255,.08);
+}
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+*{box-sizing:border-box;font-family:system-ui}
+body{margin:0;background:var(--bg);color:white;height:100vh;overflow:hidden}
+
+/* --- خلفية النجوم --- */
+#space{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle,#111,#000)}
+.star{position:absolute;background:white;border-radius:50%;opacity:.6}
+
+/* --- سطح المكتب --- */
+#desktop{display:grid;grid-template-columns:repeat(auto-fill,90px);grid-auto-rows:100px;gap:20px;padding:30px}
+
+/* --- أيقونات التطبيقات --- */
+.icon{text-align:center;cursor:pointer;border-radius:15px;padding:10px}
+.icon:hover{background:rgba(255,255,255,.06)}
+.icon i{font-size:32px;color:var(--accent)}
+.icon span{font-size:12px}
+
+/* --- النوافذ --- */
+.window{position:absolute;width:75vw;height:70vh;background:var(--surface);backdrop-filter:blur(30px);border-radius:20px;border:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.bar{padding:12px;background:rgba(255,255,255,.05);cursor:grab;display:flex;justify-content:space-between;align-items:center}
+
+/* --- شريط المهام --- */
+#taskbar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface);padding:15px 25px;border-radius:25px;display:flex;gap:20px}
+
+/* --- شاشة القفل --- */
+#lock{position:fixed;inset:0;background:black;display:flex;flex-direction:column;justify-content:center;align-items:center;transition:1s;z-index:999}
+#clock{font-size:60px;margin:0;font-weight:200}
+#mini-clock{font-size:12px;color:#888}
+</style>
 </head>
-
 <body onload="OS.boot()">
 
+<!-- خلفية النجوم -->
 <div id="space"></div>
 
+<!-- شاشة القفل -->
 <div id="lock" onclick="this.style.transform='translateY(-100%)'">
+  <div class="icon" style="font-size:50px;margin-bottom:20px;">H</div>
   <h1 id="clock">00:00:00</h1>
   <p>HATIM OS INFINITY</p>
+  <p style="color:var(--accent);margin-top:20px">اضغط للدخول</p>
 </div>
 
+<!-- سطح المكتب -->
 <div id="desktop"></div>
-<div id="taskbar"></div>
 
-<script src="core.js"></script>
-<script src="apps.js"></script>
+<!-- شريط المهام -->
+<div id="taskbar">
+  <div class="icon" onclick="OS.open('Test Game')" title="الألعاب">🎮</div>
+  <div id="mini-clock">00:00</div>
+</div>
+
+<script>
+/* =======================
+   النواة Hatim OS
+======================= */
+const OS = {
+ z:10,
+ apps:{},
+
+ boot(){
+   this.stars();
+   this.clock();
+   setInterval(this.clock,1000);
+   this.registerApps();
+   this.renderDesktop();
+ },
+
+ stars(){
+   for(let i=0;i<100;i++){
+     const s=document.createElement("div");
+     s.className="star";
+     s.style.width=s.style.height=Math.random()*2+1+"px";
+     s.style.left=Math.random()*100+"vw";
+     s.style.top=Math.random()*100+"vh";
+     document.getElementById("space").appendChild(s);
+   }
+ },
+
+ clock(){
+   const d=new Date();
+   const t=d.toLocaleTimeString();
+   document.getElementById("clock").innerText=t;
+   document.getElementById("mini-clock").innerText=t;
+ },
+
+ registerApps(){
+   // Test Game
+   this.apps["Test Game"] = {
+     name:"Test Game",
+     icon:"fa-gamepad",
+     render:function(win){
+       const canvas=document.createElement("canvas");
+       canvas.width=500; canvas.height=300;
+       canvas.style.background="#000"; canvas.style.borderRadius="15px";
+       win.querySelector(".win-body").appendChild(canvas);
+       // Game Engine
+       const game = new (class {
+         constructor(c){
+           this.c=c; this.ctx=c.getContext("2d"); this.running=true;
+           this.x=50; this.lastTime=0; this.fps=0; this.frames=0; this.fpsTime=0;
+           requestAnimationFrame(this.loop.bind(this));
+         }
+         loop(time){
+           if(!this.running) return;
+           const delta=time-this.lastTime;
+           this.lastTime=time;
+           this.update(delta);
+           this.render();
+           // FPS
+           this.frames++;
+           this.fpsTime+=delta;
+           if(this.fpsTime>=1000){this.fps=this.frames;this.frames=0;this.fpsTime=0;}
+           requestAnimationFrame(this.loop.bind(this));
+         }
+         update(delta){this.x+=0.1*delta;if(this.x>500)this.x=0;}
+         render(){
+           this.ctx.clearRect(0,0,500,300);
+           this.ctx.fillStyle="lime";
+           this.ctx.fillRect(this.x,50,50,50);
+           this.ctx.fillStyle="white";
+           this.ctx.fillText("FPS: "+this.fps,10,20);
+         }
+       })(canvas);
+     }
+   };
+ },
+
+ renderDesktop(){
+   const desk=document.getElementById("desktop");
+   desk.innerHTML="";
+   Object.values(this.apps).forEach(app=>{
+     const icon=document.createElement("div");
+     icon.className="icon";
+     icon.innerHTML=`<i class="fas ${app.icon}"></i><span>${app.name}</span>`;
+     icon.ondblclick=()=>this.open(app.name);
+     desk.appendChild(icon);
+   });
+ },
+
+ open(name){
+   if(document.getElementById(name)) return;
+   const app=this.apps[name];
+   const win=document.createElement("div");
+   win.className="window"; win.id=name;
+   win.style.zIndex=++this.z; win.style.top="10vh"; win.style.left="10vw";
+   win.innerHTML=`<div class="bar"><span>${name}</span><span style="cursor:pointer" onclick="this.closest('.window').remove()">✖</span></div>
+   <div class="win-body" style="flex:1;padding:10px"></div>`;
+   document.body.appendChild(win);
+   if(app.render) app.render(win);
+ },
+
+ drag(e,bar){
+   const w=bar.parentElement;
+   const ox=e.clientX-w.offsetLeft;
+   const oy=e.clientY-w.offsetTop;
+   document.onmousemove=ev=>{
+     w.style.left=ev.clientX-ox+"px";
+     w.style.top=ev.clientY-oy+"px";
+   };
+   document.onmouseup=()=>document.onmousemove=null;
+ }
+};
+</script>
+
 </body>
 </html>
